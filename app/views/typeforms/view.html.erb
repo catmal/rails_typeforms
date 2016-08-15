@@ -1,0 +1,15 @@
+<h1>Viewing typeform</h1>
+
+<%= link_to t(:notnow), root_url, style: 'position: fixed; z-index: 10001; top: 15px;, left: 15px;' %>
+
+<iframe src="https://<%= RailsTypeforms.config.username %>.typeform.com/to/<%= @typeform.typeform_uid %>?uid=<%= current_user.id %>&user_id=<%= current_user.id %>" width="100%" height="100%" style="position: fixed; left: 0;right:0;top:0;bottom:0;background-color:white;z-index:10000;"></iframe>
+
+<script type="text/javascript">
+  window.setInterval(function(){
+    $.get("/typeforms/<%= @typeform.id %>/check").success(function(response){
+      if (response.has_been_completed) {
+        window.location.reload();
+      }
+    });
+  }, 5000)
+</script>

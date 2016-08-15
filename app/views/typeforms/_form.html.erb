@@ -1,0 +1,10 @@
+<%= form_for @typeform do |f| %>
+  <%#= render "shared/errors", object: @typeform %>
+  <%= f.label :name %>
+  <%= f.text_field :name, class: "form-control" %>
+  <%= f.label :typeform_uid %>
+  <%= f.text_field :typeform_uid, class: "form-control" %>
+  <hr>
+  <%= f.submit 'Create', class: "btn btn-primary" %>
+
+<% end %>
