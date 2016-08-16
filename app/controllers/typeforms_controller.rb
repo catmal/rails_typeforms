@@ -57,7 +57,8 @@ class TypeformsController < ApplicationController
   private
 
   def set_typeform
-    @typeform = Typeform.find_by_id(params[:typeform_id]) || Typeform.find(params[:id])
+    id = params[:typeform_id] || params[:id]
+    @typeform = Typeform.find_by_typeform_uid(id) || Typeform.find(id)
   end
 
   def typeform_params
