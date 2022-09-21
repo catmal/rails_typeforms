@@ -1,7 +1,7 @@
 class TypeformsController < ApplicationController
   respond_to :html
 
-  before_filter :set_typeform, only: [:show, :edit, :update, :destroy, :view, :check]
+  before_action :set_typeform, only: %i[show edit update destroy view check]
 
   def index
     @typeforms = Typeform.all
@@ -11,11 +11,9 @@ class TypeformsController < ApplicationController
     @typeform = Typeform.new
   end
 
-  def show
-  end
+  def show; end
 
-  def edit
-  end
+  def edit; end
 
   def update
     @typeform.update(typeform_params)
@@ -28,17 +26,14 @@ class TypeformsController < ApplicationController
   end
 
   def view
-    if @typeform.has_been_completed?(current_user)
-      redirect_to :root
-    end
+    redirect_to :root if @typeform.has_been_completed?(current_user)
   end
 
   def check
     if @typeform.has_been_completed?(current_user)
-      render :json => {has_been_completed: true}
+      render json: { has_been_completed: true }
       return
     end
-
 
     typeform_response = HTTParty.get "https://api.typeform.com/v1/form/#{@typeform.typeform_uid}?key=#{RailsTypeforms.config.key}&completed=true&limit=100"
 
@@ -47,11 +42,9 @@ class TypeformsController < ApplicationController
     end
 
     # raise
-    if completed_responses.any?
-      @typeform.completed_typeforms.create(user_id: current_user.id)
-    end
+    @typeform.completed_typeforms.create(user_id: current_user.id) if completed_responses.any?
 
-    render :json => {has_been_completed: completed_responses.any?}
+    render json: { has_been_completed: completed_responses.any? }
   end
 
   private
